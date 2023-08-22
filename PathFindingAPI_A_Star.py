@@ -12,6 +12,8 @@ class AStar():
         self.frontier = []
         self.goal = goal
         self.origin = origin
+        self.goal_weight = 1
+        self.origin_weight = 1
         self.hv = dict()
 
     def add(self, node):
@@ -30,7 +32,7 @@ class AStar():
             r, c = state
             g_r, g_c = self.goal
             o_r, o_c = self.origin
-            self.hv[state] = abs(r-g_r) + abs(c - g_c) + abs(r-o_r) + abs(c - o_c)
+            self.hv[state] = self.goal_weight*(abs(r-g_r) + abs(c - g_c)) + self.origin_weight*(abs(r-o_r) + abs(c - o_c))
             return self.hv[state]
     
     def remove(self):
