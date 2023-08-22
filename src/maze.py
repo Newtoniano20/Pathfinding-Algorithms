@@ -8,7 +8,9 @@ class Node():
 
 class Maze():
 
-    def __init__(self, filename, goal=None, origin=None):
+    def __init__(self, filename, goal=None, origin=None, diagonals=True):
+
+        self.diagonals = diagonals
 
         # Read file and set height and width of maze
         with open(filename) as f:
@@ -81,15 +83,15 @@ class Maze():
         for action, (r, c) in candidates:
             if 0 <= r < self.height and 0 <= c < self.width and not self.walls[r][c]:
                 result.append((action, (r, c)))
-        
-        if 0 <= row + 1 < self.height and 0 <= col + 1 < self.width and not self.walls[row+1][col] and not self.walls[row][col+1] and not self.walls[row+1][col+1]:
-            result.append(("down-right", (row + 1, col + 1)))
-        if 0 <= row - 1 < self.height and 0 <= col + 1 < self.width and not self.walls[row-1][col] and not self.walls[row][col+1] and not self.walls[row-1][col+1]:
-            result.append(("up-right", (row - 1, col + 1)))
-        if 0 <= row - 1 < self.height and 0 <= col - 1 < self.width and not self.walls[row-1][col] and not self.walls[row][col-1] and not self.walls[row-1][col-1]:
-            result.append(("up-left", (row - 1, col - 1)))
-        if 0 <= row + 1 < self.height and 0 <= col - 1 < self.width and not self.walls[row+1][col] and not self.walls[row][col-1] and not self.walls[row+1][col-1]:
-            result.append(("down-left", (row + 1, col - 1))) 
+        if self.diagonals:
+            if 0 <= row + 1 < self.height and 0 <= col + 1 < self.width and not self.walls[row+1][col] and not self.walls[row][col+1] and not self.walls[row+1][col+1]:
+                result.append(("down-right", (row + 1, col + 1)))
+            if 0 <= row - 1 < self.height and 0 <= col + 1 < self.width and not self.walls[row-1][col] and not self.walls[row][col+1] and not self.walls[row-1][col+1]:
+                result.append(("up-right", (row - 1, col + 1)))
+            if 0 <= row - 1 < self.height and 0 <= col - 1 < self.width and not self.walls[row-1][col] and not self.walls[row][col-1] and not self.walls[row-1][col-1]:
+                result.append(("up-left", (row - 1, col - 1)))
+            if 0 <= row + 1 < self.height and 0 <= col - 1 < self.width and not self.walls[row+1][col] and not self.walls[row][col-1] and not self.walls[row+1][col-1]:
+                result.append(("down-left", (row + 1, col - 1))) 
         return result
 
 

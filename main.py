@@ -1,10 +1,7 @@
 import time
-import sys
-
 from src import Maze, AStar, Greedy, QueueFrontier, StackFrontier
 
-if len(sys.argv) != 2:
-    sys.exit("Usage: python maze.py maze.txt")
+PATH_TO_MAZE = "./maze1.txt"
 
 to = time.time()
 
@@ -13,16 +10,16 @@ B = (8, 4)
 C = (18, 6)
 D = (0, 1)
 
-m = Maze(filename=sys.argv[1], origin=A, goal=B)
+m = Maze(filename=PATH_TO_MAZE, origin=C, goal=D, diagonals=False)
 # print("Maze:")
 # m.print()
 print("Solving...")
 m.solve(Algorithm=AStar)
 
-print("States Explored:", m.num_explored)
-# print("Solution:")
-# m.print()
-m.output_image("maze.png", show_explored=True)
+print("States Explored:", m.num_explored) # number of states explored (lower the better)
+print("Number of steps of the solution:", len(m.solution[0]))
+# print("Solution: \n {m.print()}") # prints maze to terminal
+m.output_image("maze.png", show_explored=True)  # saves image of maze
 
-print(m.solution)
+# print(m.solution) #prints solution of the maze in a step by step structure
 print(f"Time spent: {time.time() - to}")
