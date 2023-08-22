@@ -1,4 +1,3 @@
-import sys
 
 class Node():
     def __init__(self, state, parent, action):
@@ -7,41 +6,21 @@ class Node():
         self.action = action
 
 
-class QueueFrontier():
-    def __init__(self):
-        self.frontier = []
-
-    def add(self, node):
-        self.frontier.append(node)
-
-    def contains_state(self, state):
-        return any(node.state == state for node in self.frontier)
-
-    def empty(self):
-        return len(self.frontier) == 0
-
-    def remove(self):
-        if self.empty():
-            raise Exception("empty frontier")
-        else:
-            node = self.frontier[0]
-            self.frontier = self.frontier[1:]
-            return node
-
 class Maze():
 
-    def __init__(self, filename):
+    def __init__(self, filename, goal=None, origin=None):
 
         # Read file and set height and width of maze
         with open(filename) as f:
             contents = f.read()
 
         # Validate start and goal
-        if contents.count("A") != 1:
+        if contents.count("A") != 1 and origin is None:
             raise Exception("maze must have exactly one start point")
-        if contents.count("B") != 1:
+        if contents.count("B") != 1 and goal is None:
             raise Exception("maze must have exactly one goal")
-
+        self.start = origin
+        self.goal = goal
         # Determine height and width of maze
         contents = contents.splitlines()
         self.height = len(contents)
@@ -102,6 +81,7 @@ class Maze():
         for action, (r, c) in candidates:
             if 0 <= r < self.height and 0 <= c < self.width and not self.walls[r][c]:
                 result.append((action, (r, c)))
+        
         if 0 <= row + 1 < self.height and 0 <= col + 1 < self.width and not self.walls[row+1][col] and not self.walls[row][col+1] and not self.walls[row+1][col+1]:
             result.append(("down-right", (row + 1, col + 1)))
         if 0 <= row - 1 < self.height and 0 <= col + 1 < self.width and not self.walls[row-1][col] and not self.walls[row][col+1] and not self.walls[row-1][col+1]:
@@ -113,7 +93,7 @@ class Maze():
         return result
 
 
-    def solve(self):
+    def solve(self, Algorithm):
         """Finds a solution to maze, if one exists."""
 
         # Keep track of number of states explored
@@ -121,7 +101,7 @@ class Maze():
 
         # Initialize frontier to just the starting position
         start = Node(state=self.start, parent=None, action=None)
-        frontier = QueueFrontier()
+        frontier = Algorithm(self.goal, start.state)
         frontier.add(start)
 
         # Initialize an empty explored set
