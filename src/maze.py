@@ -8,7 +8,7 @@ class Node():
 
 class Maze():
 
-    def __init__(self, filename, goal=None, origin=None, diagonals=True):
+    def __init__(self, filename, goal=None, origin=None, diagonals=True, resolution=1):
 
         self.diagonals = diagonals
 
@@ -24,7 +24,20 @@ class Maze():
         self.start = origin
         self.goal = goal
         # Determine height and width of maze
-        contents = contents.splitlines()
+        read_contents = contents.splitlines()
+        if resolution != 1:
+            contents = []
+            for row in read_contents:
+                updated_column = ""
+                for column in row:
+                    for _ in range(resolution):
+                        updated_column += column      
+                for _ in range(resolution):
+                    contents.append(updated_column)
+            self.goal = (int(self.goal[0]*resolution), int(self.goal[1]*resolution))
+            self.start = (int(self.start[0]*resolution), int(self.start[1]*resolution))
+        else:
+            contents = read_contents
         self.height = len(contents)
         self.width = max(len(line) for line in contents)
 

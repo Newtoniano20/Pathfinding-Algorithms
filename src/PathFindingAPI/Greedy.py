@@ -6,16 +6,19 @@ class Greedy(Algorithm):
         self.goal = goal
         self.hv = dict()
     
-    def h(self, state):
-        # Uses Manhattan distance
-        if state in self.hv.keys():
-            return self.hv[state]
+    def add(self, node):
+        self.h(node)
+        self.frontier.append(node)
+
+    def h(self, node):
+        if node in self.hv.keys():
+            return self.hv[node]
         else:
-            r, c = state
+            r, c = node.state
             g_r, g_c = self.goal
-            self.hv[state] = abs(r-g_r) + abs(c - g_c)
-            return self.hv[state]
-        
+            self.hv[node] = abs(r-g_r) + abs(c - g_c)
+            return self.hv[node]
+            
     def remove(self):
         """
         Gives back the best node to follow using Greedy Breadth First Algorithm
@@ -23,13 +26,6 @@ class Greedy(Algorithm):
         if self.empty():
             raise Exception("empty frontier")
         else:
-            node = self.frontier[0]
-            best_h = self.h(self.frontier[0].state)
-            for n in self.frontier:
-                if self.h(n.state) < best_h:
-                    best_h = self.h(n.state)
-                    node = n
+            node = min(self.frontier, key=self.hv.get)
             self.frontier.remove(node)
-            if self.frontier is None:
-                self.frontier = []
             return node
