@@ -161,7 +161,7 @@ class Maze():
 
     def output_image(self, filename, show_solution=True, show_explored=False):
         from PIL import Image, ImageDraw
-        cell_size = 50
+        cell_size = 10
         cell_border = 2
 
         # Create a blank canvas
